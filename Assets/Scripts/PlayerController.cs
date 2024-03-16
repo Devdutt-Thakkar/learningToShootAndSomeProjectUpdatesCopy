@@ -18,6 +18,10 @@ public class PlayerController : MonoBehaviour
     private InputAction shootAction;
 
     [SerializeField]
+    private SwitchVCam switchV;
+    
+
+    [SerializeField]
     private float playerSpeed = 2.0f;
     [SerializeField]
     private float jumpHeight = 1.0f;
@@ -107,35 +111,60 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
 
-        aimTarget.position = cameraTransform.position + cameraTransform.forward * aimDistance;
-        groundedPlayer = controller.isGrounded;
-        if (groundedPlayer && playerVelocity.y < 0)
-        {
-            playerVelocity.y = 0f;
-        }
-        Vector2 input = moveAction.ReadValue<Vector2>();
-        currentAnimationBlendVector = Vector2.SmoothDamp(currentAnimationBlendVector, input, ref animationVelocity, animationSmoothTime); ;
-        Vector3 move = new Vector3(input.x, 0, input.y);
-        move = move.x * cameraTransform.right.normalized + backwardMove * cameraTransform.forward.normalized;
-        move.y = 0;
-        controller.Move(move * Time.deltaTime * playerSpeed);
+        //aimTarget.position = cameraTransform.position + cameraTransform.forward * aimDistance;
+        //groundedPlayer = controller.isGrounded;
+        //if (groundedPlayer && playerVelocity.y < 0)
+        //{
+        //    playerVelocity.y = 0f;
+        //}
+        //Vector2 input = moveAction.ReadValue<Vector2>();
+        //currentAnimationBlendVector = Vector2.SmoothDamp(currentAnimationBlendVector, input, ref animationVelocity, animationSmoothTime); ;
+        //Vector3 move = new Vector3(input.x, 0, input.y);
+        //move = move.x * cameraTransform.right.normalized + backwardMove * cameraTransform.forward.normalized;
+        //move.y = 0;
+        //controller.Move(move * Time.deltaTime * playerSpeed);
         //Blend Strafe animation
-        animator.SetFloat(moveXAnimationParamId, currentAnimationBlendVector.x);
-        animator.SetFloat(moveZAnimationParamId, -1);
-
-        // Changes the height position of the player..
-        if (jumpAction.triggered && groundedPlayer)
+        if (switchV.aimCanvas.enabled == true)
         {
-            playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
-            animator.CrossFade(jumpAnimation, animationPlayTransission);
+            aimTarget.position = cameraTransform.position + cameraTransform.forward * aimDistance;
+            groundedPlayer = controller.isGrounded;
+            if (groundedPlayer && playerVelocity.y < 0)
+            {
+                playerVelocity.y = 0f;
+            }
+            Vector2 input = moveAction.ReadValue<Vector2>();
+            currentAnimationBlendVector = Vector2.SmoothDamp(currentAnimationBlendVector, input, ref animationVelocity, animationSmoothTime); ;
+            Vector3 move = new Vector3(input.x, 0, input.y);
+            move = move.x * cameraTransform.right.normalized + backwardMove * cameraTransform.forward.normalized;
+            move.y = 0;
+            controller.Move(move * Time.deltaTime * playerSpeed);
+            animator.SetFloat(moveXAnimationParamId, currentAnimationBlendVector.x);
+            animator.SetFloat(moveZAnimationParamId, -1);
+            // Changes the height position of the player..
+            if (jumpAction.triggered && groundedPlayer)
+            {
+                playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
+                animator.CrossFade(jumpAnimation, animationPlayTransission);
+            }
+
+            playerVelocity.y += gravityValue * Time.deltaTime;
+            controller.Move(playerVelocity * Time.deltaTime);
+
+            // Rotate towards camera direction
+            float targetAngle = cameraTransform.eulerAngles.y;
+            Quaternion targetRotation = Quaternion.Euler(0, cameraTransform.eulerAngles.y, 0);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        }
+        else if(switchV.thirdPersonCanvas.enabled == true)
+        {
+            aimTarget.position = cameraTransform.position + cameraTransform.forward * aimDistance;
+            groundedPlayer = controller.isGrounded;
+            if (groundedPlayer && playerVelocity.y < 0)
+            {
+                playerVelocity.y = 0f;
+            }
         }
 
-        playerVelocity.y += gravityValue * Time.deltaTime;
-        controller.Move(playerVelocity * Time.deltaTime);
-
-        // Rotate towards camera direction
-        float targetAngle = cameraTransform.eulerAngles.y;
-        Quaternion targetRotation = Quaternion.Euler(0, cameraTransform.eulerAngles.y, 0);
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        
     }
 }
