@@ -11,11 +11,9 @@ public class SwitchVCam : MonoBehaviour
     private CinemachineVirtualCamera virtualCamera;
     private InputAction aimAction;
 
-    [SerializeField]
-    private Canvas thirdPersonCanvas;
+    public Canvas thirdPersonCanvas;
 
-    [SerializeField]
-    private Canvas aimCanvas;
+    public Canvas aimCanvas;
 
     [SerializeField]
     private int priotityBoostAmount = 10;
@@ -24,7 +22,7 @@ public class SwitchVCam : MonoBehaviour
     {
         virtualCamera = GetComponent<CinemachineVirtualCamera>();
         aimAction = playerInput.actions["Aim"];
-        //aimCanvas.enabled = false;
+        aimCanvas.enabled = false;
     }
 
     private void OnEnable()
