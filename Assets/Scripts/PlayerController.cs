@@ -155,19 +155,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
 
-        //aimTarget.position = cameraTransform.position + cameraTransform.forward * aimDistance;
-        //groundedPlayer = controller.isGrounded;
-        //if (groundedPlayer && playerVelocity.y < 0)
-        //{
-        //    playerVelocity.y = 0f;
-        //}
-        //Vector2 input = moveAction.ReadValue<Vector2>();
-        //currentAnimationBlendVector = Vector2.SmoothDamp(currentAnimationBlendVector, input, ref animationVelocity, animationSmoothTime); ;
-        //Vector3 move = new Vector3(input.x, 0, input.y);
-        //move = move.x * cameraTransform.right.normalized + backwardMove * cameraTransform.forward.normalized;
-        //move.y = 0;
-        //controller.Move(move * Time.deltaTime * playerSpeed);
-        //Blend Strafe animation
+        
         if (switchV.aimCanvas.enabled == true)
         {
 
